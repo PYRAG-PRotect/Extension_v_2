@@ -44,9 +44,9 @@ def get_user_data(user_input):
     return cursor.fetchall()
 `;
 
-// Store API key in chrome.storage
-const GEMINI_API_KEY = 'AIzaSyCI8J0vGyBOAo4ibSOCcpE4gdyqP-EDY20';
-chrome.storage.local.set({ geminiApiKey: GEMINI_API_KEY });
+
+// Remove the hardcoded API key and just initialize storage
+chrome.storage.local.set({ geminiApiKey: "AIzaSyCI8J0vGyBOAo4ibSOCcpE4gdyqP-EDY20" });
 
 // Listen for messages from content script
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -131,8 +131,8 @@ async function analyzeSecurityIssues(files) {
     // Calculate overall score
     const totalSeverity = issues.reduce((sum, issue) => sum + issue.severity, 0);
     const score = issues.length > 0 
-      ? Math.max(0, 10 - Math.round(totalSeverity / issues.length))
-      : 10;
+      ? Math.max(0, 100 - Math.round((totalSeverity / issues.length) * 10))
+      : 100;
     
     return {
       score: score,
