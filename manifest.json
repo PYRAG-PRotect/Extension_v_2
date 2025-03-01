@@ -1,0 +1,32 @@
+{
+    "manifest_version": 3,
+    "name": "PR Security Analyzer",
+    "version": "1.0",
+    "description": "Analyzes PRs for security vulnerabilities using Gemini API",
+    "permissions": [
+      "activeTab",
+      "storage",
+      "scripting",
+      "tabs"
+    ],
+    "host_permissions": [
+      "*://github.com/*",
+      "https://generativelanguage.googleapis.com/*"
+    ],
+    "content_scripts": [
+      {
+        "matches": [
+          "*://github.com/*",
+          "*://www.github.com/*"
+        ],
+        "js": ["content.js"],
+        "run_at": "document_idle"
+      }
+    ],
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "background": {
+      "service_worker": "background.js"
+    }
+}

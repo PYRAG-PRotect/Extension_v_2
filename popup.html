@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PR Security Analyzer</title>
+  <style>
+    body {
+      width: 350px;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+    }
+    .header {
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    .score-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .score-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px solid red;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 32px;
+      font-weight: bold;
+    }
+    .score-label {
+      text-align: center;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    .file-count {
+      text-align: center;
+      color: #666;
+      margin-bottom: 15px;
+    }
+    .risk-container {
+      margin-top: 15px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .risk-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .risk-item {
+      border-left: 3px solid red;
+      padding-left: 10px;
+      margin-bottom: 15px;
+    }
+    .risk-header {
+      font-weight: bold;
+    }
+    .risk-details {
+      color: #666;
+      margin: 3px 0;
+    }
+    .loading {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .button {
+      display: block;
+      width: 100%;
+      padding: 8px;
+      background-color: #0366d6;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .api-key-section {
+      display: none;
+    }
+    .input-field {
+      width: 100%;
+      padding: 6px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">PR Security Analyzer</div>
+  
+  <div class="score-container">
+    <div class="score-circle" id="score">0</div>
+  </div>
+  
+  <div class="score-label">Security Score</div>
+  <div class="file-count" id="file-count">Analyzed 0 files</div>
+  
+  <div id="loading" class="loading" style="display: none;">
+    Analyzing code for security issues...
+  </div>
+  
+  <div class="risk-container" id="risks">
+    <!-- Risks will be inserted here by JavaScript -->
+  </div>
+  
+  <button id="analyze-button" class="button">Analyze Current PR</button>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
+
