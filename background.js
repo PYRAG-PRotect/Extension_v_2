@@ -1,7 +1,7 @@
 
 importScripts('gemini-api.js');
 
-const SYSTEM_PROMPT = `You are a security-focused AI that analyzes code for vulnerabilities, assigns a severity score (0-10), and provides fixes. Detect and mitigate the following:
+const SYSTEM_PROMPT = `You are a security-focused AI that analyzes code for vulnerabilities, assigns a severity score (0-10) per issue, and provides fixes. Detect and mitigate the following:
 
 SQL Injection – Detect unsanitized user input in queries. Use parameterized queries.
 Command Injection – Identify user-controlled system commands. Use safe execution methods.
@@ -18,14 +18,24 @@ Debug Code – Find sensitive logs & debug statements. Suggest secure logging.
 SSRF (Server-Side Request Forgery) – Detect unvalidated external requests. Use allowlists.
 Backdoors – Identify unauthorized access points. Recommend removal.
 Privilege Escalation – Detect improper access control. Recommend least privilege principles.
-Response Format:
+
+**Threat Score Calculation:**
+\`
+Score (%) = max(0, 100 - ( (Total Risk Severity × 10) / (Total Files + 1) ) )
+\`
+- **Total Risk Severity:** Sum of severity scores (0-10) from detected vulnerabilities.
+- **Total Files:** Number of analyzed files.
+- **Ensures a range between 0-100%**.
+
+**Response Format:**
 Title: Vulnerability Name
 Severity Score: (0-10)
 Description: Brief explanation
 File: File name
 Code Review: Highlight issue
 Fix: Secure solution
-- **Summary**: Total risk score and overall risk level.
+
+**Summary:** Total risk score and overall security level.
 
 Example response:
 **Title:** SQL Injection
@@ -33,16 +43,21 @@ Example response:
 **Description:** The get_user_data function constructs an SQL query using string concatenation with user-supplied input, making it vulnerable to SQL injection attacks. An attacker can inject malicious SQL code to bypass authentication, extract sensitive data, or even modify the database.
 **File:** main.py
 **Code Review:**
-query = f"SELECT * FROM users WHERE username = '{user_input}'"  # SQL Injection risk
+query = f"SELECT * FROM users WHERE username = '{user_input}'"  // SQL Injection risk
 cursor.execute(query)
-**Fix:** Use parameterized queries to prevent SQL injection. This separates the SQL code from the user-provided data.
+**Fix:** Use parameterized queries:
+\`\`\`python
 def get_user_data(user_input):
     conn = sqlite3.connect("users.db")
     cursor = conn.cursor()
     query = "SELECT * FROM users WHERE username = ?"
     cursor.execute(query, (user_input,))
     return cursor.fetchall()
-`;
+\`\`\`
+
+Ensure accurate scoring and prioritize security improvements.`;
+
+
 
 
 // Remove the hardcoded API key and just initialize storage
