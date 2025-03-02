@@ -1,13 +1,22 @@
 // popup.js
 document.addEventListener('DOMContentLoaded', function() {
-    // Load any existing security data
-    chrome.storage.local.get(['securityData'], function(result) {
-      if (result.securityData) {
-        updateUI(result.securityData);
-      } else {
-        document.getElementById('risks').innerHTML = 
-          '<div>No security data available. Click "Analyze Current PR" to start.</div>';
-      }
+    // Set initial state
+    document.getElementById('risks').innerHTML = 
+      '<div class="risk-title">Ready to Analyze</div>' +
+      '<div style="color: #57606a; padding: 10px;">' +
+      'Click the button below to analyze the current PR for security issues.' +
+      '</div>';
+
+    // Load security data only if we're on the same PR page
+    chrome.tabs.query({active: true, currentWindow: true}, async function(tabs) {
+      const currentTab = tabs[0];
+      const currentUrl = currentTab?.url || '';
+      
+      chrome.storage.local.get(['securityData', 'lastAnalyzedUrl'], function(result) {
+        if (result.securityData && result.lastAnalyzedUrl === currentUrl) {
+          updateUI(result.securityData);
+        }
+      });
     });
     
     // Set up analyze button
@@ -73,7 +82,15 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       if (request.action === 'analysisComplete') {
         document.getElementById('loading').style.display = 'none';
-        updateUI(request.data);
+        // Store both the results and the URL where they were generated
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+          const currentUrl = tabs[0]?.url || '';
+          chrome.storage.local.set({
+            securityData: request.data,
+            lastAnalyzedUrl: currentUrl
+          });
+          updateUI(request.data);
+        });
       }
     });
   });

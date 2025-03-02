@@ -2,7 +2,16 @@
     "manifest_version": 3,
     "name": "PR Security Analyzer",
     "version": "1.0",
-    "description": "Analyzes PRs for security vulnerabilities using Gemini API",
+    "description": "Analyzes PRs for security vulnerabilities",
+    "icons": {
+      "128": "images/image.png"
+    },
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": {
+        "128": "images/image.png"
+      }
+    },
     "permissions": [
       "activeTab",
       "storage",
@@ -23,9 +32,6 @@
         "run_at": "document_idle"
       }
     ],
-    "action": {
-      "default_popup": "popup.html"
-    },
     "background": {
       "service_worker": "background.js"
     }

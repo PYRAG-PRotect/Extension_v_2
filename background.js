@@ -1,4 +1,4 @@
-// Import our Gemini API implementation
+
 importScripts('gemini-api.js');
 
 const SYSTEM_PROMPT = `You are a security-focused AI that analyzes code for vulnerabilities, assigns a severity score (0-10), and provides fixes. Detect and mitigate the following:
