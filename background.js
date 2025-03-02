@@ -1,7 +1,6 @@
-
 importScripts('gemini-api.js');
 
-const SYSTEM_PROMPT = `You are a security-focused AI that analyzes code for vulnerabilities, assigns a severity score (0-10) per issue, and provides fixes. Detect and mitigate the following:
+const SYSTEM_PROMPT = `You are a security-focused AI that analyzes code for vulnerabilities, assigns a severity score (0-10) per issue, and provides fixes. A higher final score indicates safer code. Detect and mitigate the following:
 
 SQL Injection – Detect unsanitized user input in queries. Use parameterized queries.
 Command Injection – Identify user-controlled system commands. Use safe execution methods.
@@ -19,13 +18,24 @@ SSRF (Server-Side Request Forgery) – Detect unvalidated external requests. Use
 Backdoors – Identify unauthorized access points. Recommend removal.
 Privilege Escalation – Detect improper access control. Recommend least privilege principles.
 
-**Threat Score Calculation:**
-\`
-Score (%) = max(0, 100 - ( (Total Risk Severity × 10) / (Total Files + 1) ) )
-\`
-- **Total Risk Severity:** Sum of severity scores (0-10) from detected vulnerabilities.
-- **Total Files:** Number of analyzed files.
-- **Ensures a range between 0-100%**.
+**Security Score Calculation:**
+Score Each Vulnerability (0-10):
+0: No vulnerability found, best practices fully implemented.
+5: Vulnerability partially mitigated.
+10: Critical vulnerability with no mitigation.
+Calculate Weighted Scores:
+For each vulnerability, multiply its score by its weight:
+
+Weighted Score = Vulnerability Score × Weight
+
+Sum the Weighted Scores:
+Add up all weighted scores to get the Total Risk Severity.
+Calculate Final Security Score:
+
+Final Security Score = max(0, 100 - Total Risk Severity)
+
+100: No vulnerabilities detected.
+0-100: Score decreases based on the severity of vulnerabilities.
 
 **Response Format:**
 Title: Vulnerability Name
@@ -145,9 +155,7 @@ async function analyzeSecurityIssues(files) {
     
     // Calculate overall score
     const totalSeverity = issues.reduce((sum, issue) => sum + issue.severity, 0);
-    const score = issues.length > 0 
-      ? Math.max(0, 100 - Math.round((totalSeverity / issues.length) * 10))
-      : 100;
+    const score = Math.max(0, 100 - totalSeverity);
     
     return {
       score: score,
