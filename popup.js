@@ -93,6 +93,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       }
     });
+
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    
+    // Load saved theme preference
+    chrome.storage.local.get(['theme'], function(result) {
+        if (result.theme === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+            themeToggle.checked = true;
+        }
+    });
+
+    // Handle theme toggle
+    themeToggle.addEventListener('change', function() {
+        const theme = this.checked ? 'dark' : 'light';
+        document.body.setAttribute('data-theme', theme);
+        chrome.storage.local.set({ theme: theme });
+    });
   });
   
   function updateUI(data) {
