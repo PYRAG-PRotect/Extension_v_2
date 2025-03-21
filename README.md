@@ -39,3 +39,7 @@ A Chrome Extension that helps developers analyze and detect security vulnerabili
 - It categorizes issues as Safe (100%) or Vulnerable Code (10-90%) based on the security assessment.
 - A security score is displayed based on the findings
 - Developers get insights on how to fix vulnerabilities before merging
+
+## 📖 Contribution Guidelines
+Please read the [CONTRIBUTION.md](https://github.com/PYRAG-PRotect/Extension_v_2/blob/main/CONTRIBUTION.md) file for detailed steps on how to contribute.
+
